@@ -1,0 +1,26 @@
+{
+  "name": "baohx2000/qless-gui",
+  "description": "GUI for qless job queue",
+  "license": "MIT",
+  "authors": [
+    {
+      "name": "Gordon",
+      "email": "baohx2000@gmail.com"
+    }
+  ],
+  "minimum-stability": "dev",
+  "repositories": [
+    {
+      "type": "git",
+      "url": "https://github.com/baohx2000/qless-php.git"
+    }
+  ],
+  "require": {
+    "contatta/qless-php": "dev-fixed"
+  },
+  "autoload"          : {
+    "psr-4" : {
+      "B2k\\QlessGui\\" : "src/B2k/QlessGui"
+    }
+  }
+}
