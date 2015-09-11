@@ -1,5 +1,5 @@
 import { combineReducers } from 'redux';
-import queues from './qless';
+import qless from './qless';
 
 const rootReducer = combineReducers({
     qless
