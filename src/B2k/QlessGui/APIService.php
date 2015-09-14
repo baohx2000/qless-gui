@@ -41,7 +41,19 @@ class APIService
 
     public function queueStatus($queue)
     {
-        return $this->client->getQueue($queue)->stats();
+        return [
+            'stats' => $this->client->getQueue($queue)->stats(),
+            'length' => $this->queueLength($queue),
+        ];
+    }
+
+    public function getJobs()
+    {
+        return [
+            'completed' => $this->completedJobs(),
+            'scheduled' => $this->scheduledJobs(),
+            'failed'    => $this->failedJobs(),
+        ];
     }
 
     public function completedJobs($start = 0, $count = 25)
@@ -49,9 +61,22 @@ class APIService
         return $this->client->jobs('complete', $start, $count);
     }
 
-    public function failedJobs($start = 0, $count = 25)
+    public function scheduledJobs($start = 0, $count = 25)
     {
-        return $this->client->jobs('failed', $start, $count);
+        return $this->client->jobs('scheduled', $start, $count);
+    }
+
+    public function failedJobs($type = false)
+    {
+        if (!$type) {
+            $types = json_decode($this->client->failed(), true);
+            foreach ($types as $type => $count) {
+                $types[$type] = $this->failedJobs($type);
+            }
+            return $types;
+        }
+
+        return $this->client->failed($type, 0, 25);
     }
 
     public function queueLength($queue)

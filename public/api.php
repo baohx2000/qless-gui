@@ -20,6 +20,9 @@ switch ($_REQUEST['command']) {
     case 'workers':
         $response = json_encode($service->workers());
         break;
+    case 'jobs':
+        $response = json_encode($service->getJobs());
+        break;
 }
 
 header('Content-Type: application/json');

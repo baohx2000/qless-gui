@@ -2,11 +2,18 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title></title>
-    <script src="https://fb.me/react-0.13.3.min.js"></script>
-    <script src="https://fb.me/JSXTransformer-0.13.3.js"></script>
+    <title>Qless</title>
+    <script src="http://code.jquery.com/jquery-2.1.4.min.js"></script>
+    <script src="http://code.jquery.com/ui/1.11.4/jquery-ui.min.js"></script>
+    <link rel="stylesheet" href="http://code.jquery.com/ui/1.11.4/themes/ui-darkness/jquery-ui.css"/>
+    <script src="./js/qless-gui.js"></script>
 </head>
 <body>
-
+    <div id="header">
+        <a href="javascript:QlessGui.showQueues()">Queues</a> |
+        <a href="javascript:QlessGui.showWorkers()">Workers</a> |
+        <a href="javascript:QlessGui.showJobs()">Jobs</a>
+    </div>
+    <div id="main"></div>
 </body>
 </html>
