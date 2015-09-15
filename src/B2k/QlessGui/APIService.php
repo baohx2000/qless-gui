@@ -42,7 +42,7 @@ class APIService
     public function queueStatus($queue)
     {
         return [
-            'stats' => $this->client->getQueue($queue)->stats(),
+            'stats' => json_decode($this->client->getQueue($queue)->stats()),
             'length' => $this->queueLength($queue),
         ];
     }
@@ -71,7 +71,7 @@ class APIService
         if (!$type) {
             $types = json_decode($this->client->failed(), true);
             foreach ($types as $type => $count) {
-                $types[$type] = $this->failedJobs($type);
+                $types[$type] = json_decode($this->failedJobs($type), true);
             }
             return $types;
         }
