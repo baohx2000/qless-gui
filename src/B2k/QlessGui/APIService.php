@@ -87,6 +87,7 @@ class APIService
 
     public function workers()
     {
-        return $this->redis->zRange('ql:workers', 0, 999);
+        $out = $this->client->workers();
+        return json_decode($out, true);
     }
 }

@@ -7,6 +7,7 @@ var QlessGui = {
                 jQuery('#main').mustache('qless-main', {});
                 QlessGui.showQueues('#queue-list-container');
                 QlessGui.showFails('#fail-list-container');
+                QlessGui.showWorkers('#worker-list-container');
             });
     },
 
@@ -34,16 +35,12 @@ var QlessGui = {
 
     showWorkers: function()
     {
+        var el = typeof arguments[0] === 'undefined' ? '#main' : arguments[0];
         jQuery.get('/api.php?command=workers', function(data) {
-            jQuery('#main').html('');
-            jQuery(data).each(function(key, name) {
-                jQuery('#main').append(
-                    jQuery(
-                        '<div class="queue-container"><span class="queue-name">' + name + '</span>' +
-                        '</div>'
-                    )
-                );
-            });
+            jQuery.Mustache.load('/js/templates/worker-list.mustache')
+                .done(function () {
+                    jQuery(el).mustache('worker-list', {data: data});
+                });
         });
     },
 

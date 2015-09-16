@@ -4,13 +4,13 @@
     <h1>No Failed Jobs <small>Yey!</small></h1>
 </div>
 {{/data}}
-{{#data}}
+{{#data.length}}
 <div class="page-header">
     <h1>Failed Jobs <small>D'oh!</small></h1>
 </div>
 <div class="l-sidebyside failed-job">
     <div class="min-col-size">
-{{/data}}
+{{/data.length}}
 {{#data}}
     <div class="row">
         <h3><a href="/failed/{{name}}">{{name}}</a></h3>
