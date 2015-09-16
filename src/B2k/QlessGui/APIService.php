@@ -66,14 +66,15 @@ class APIService
         return $this->client->jobs('scheduled', $start, $count);
     }
 
-    public function failedJobs($type = false)
+    public function failedJobs($type = false, $page = 1)
     {
         if (!$type) {
             $types = json_decode($this->client->failed(), true);
-            foreach ($types as $type => $count) {
-                $types[$type] = json_decode($this->failedJobs($type), true);
+            $out = [];
+            foreach ($types as $name => $count) {
+                $out[] = ['name' => $name, 'count' => $count];
             }
-            return $types;
+            return $out;
         }
 
         return $this->client->failed($type, 0, 25);

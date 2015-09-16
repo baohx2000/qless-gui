@@ -5,15 +5,29 @@ var QlessGui = {
         jQuery.Mustache.load('/js/templates/main.mustache')
             .done(function () {
                 jQuery('#main').mustache('qless-main', {});
+                QlessGui.showQueues('#queue-list-container');
+                QlessGui.showFails('#fail-list-container');
             });
     },
 
     showQueues: function()
     {
+        var el = typeof arguments[0] === 'undefined' ? '#main' : arguments[0];
         jQuery.get('/api.php?command=queues', function(data) {
             jQuery.Mustache.load('/js/templates/queue-list.mustache')
                 .done(function () {
-                    jQuery('#main').mustache('queue-list', {queues: data});
+                    jQuery(el).mustache('queue-list', {queues: data});
+                });
+        });
+    },
+
+    showFails: function()
+    {
+        var el = typeof arguments[0] === 'undefined' ? '#main' : arguments[0];
+        jQuery.get('/api.php?command=fails', function(data) {
+            jQuery.Mustache.load('/js/templates/fail-list.mustache')
+                .done(function () {
+                    jQuery(el).mustache('fail-list', {data: data});
                 });
         });
     },

@@ -8,6 +8,9 @@ switch ($_REQUEST['command']) {
     case 'queues':
         $response = $service->getQueues();
         break;
+    case 'fails':
+        $response = json_encode($service->failedJobs());
+        break;
     case 'status':
         $response = json_encode($service->queueStatus($_REQUEST['queue']));
         break;
