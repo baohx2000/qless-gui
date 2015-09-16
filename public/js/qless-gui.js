@@ -6,27 +6,15 @@ var QlessGui = {
             .done(function () {
                 jQuery('#main').mustache('qless-main', {});
             });
-
     },
 
     showQueues: function()
     {
         jQuery.get('/api.php?command=queues', function(data) {
-            jQuery('#main').html('');
-            jQuery(data).each(function(key, data) {
-                jQuery('#main').append(
-                    jQuery(
-                        '<div class="queue-container">' +
-                            '<a onclick="QlessGui.showQueue(this)" class="queue-name">' + data.name + '</a>' +
-                            '<div>Paused: '+ data.paused +'</div>' +
-                            '<div>Running: '+ data.running +'</div>' +
-                            '<div>Scheduled: '+ data.scheduled +'</div>' +
-                            '<div>Stalled: '+ data.stalled +'</div>' +
-                            '<div>Waiting: '+ data.waiting +'</div>' +
-                        '</div>'
-                    )
-                );
-            });
+            jQuery.Mustache.load('/js/templates/queue-list.mustache')
+                .done(function () {
+                    jQuery('#main').mustache('queue-list', {queues: data});
+                });
         });
     },
 
@@ -106,8 +94,12 @@ var QlessGui = {
 // super simple router
 var match = window.location.href.match(/https?:\/\/[^\/]*(.*)/i);
 switch(match[1]) {
+    case '':
     case '/':
         QlessGui.showMain();
+        break;
+    case '/queues':
+        QlessGui.showQueues();
         break;
     case match[1].match(/queues/):
         break;

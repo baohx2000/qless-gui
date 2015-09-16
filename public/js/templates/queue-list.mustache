@@ -1,0 +1,24 @@
+<script id="queue-list" type="text/html">
+    <div class="container">
+        <div class="page-header">
+            <h1>Queues <small>And their job counts</small></h1>
+        </div>
+
+        {{#queues}}
+            <div class="row">
+                <div class="span4">
+                    <h3><a href="/queues/{{name}}">{{name}}</a></h3>
+                </div>
+                <div class="span8">
+                    <h3> |
+                        {{running}} /
+                        {{waiting}} /
+                        {{scheduled}} /
+                        {{stalled}} /
+                        {{depends}} <small>(running / waiting / scheduled / stalled / depends)</small>
+                    </h3>
+                </div>
+            </div>
+        {{/queues}}
+    </div>
+</script>
