@@ -3,17 +3,64 @@
 <head>
     <meta charset="UTF-8">
     <title>Qless</title>
-    <script src="http://code.jquery.com/jquery-2.1.4.min.js"></script>
-    <script src="http://code.jquery.com/ui/1.11.4/jquery-ui.min.js"></script>
-    <link rel="stylesheet" href="http://code.jquery.com/ui/1.11.4/themes/ui-darkness/jquery-ui.css"/>
-    <script src="./js/qless-gui.js"></script>
+
+    <!-- Latest compiled and minified CSS -->
+    <link rel="stylesheet" href="http://getbootstrap.com/dist/css/bootstrap.min.css">
+
+    <!-- Optional theme -->
+    <link rel="stylesheet" href="http://getbootstrap.com/dist/css/bootstrap-theme.min.css">
+
 </head>
-<body>
-    <div id="header">
-        <a href="javascript:QlessGui.showQueues()">Queues</a> |
-        <a href="javascript:QlessGui.showWorkers()">Workers</a> |
-        <a href="javascript:QlessGui.showJobs()">Jobs</a>
+<body role="document">
+<nav class="navbar navbar-fixed-top">
+    <div class="navbar-inner">
+        <div class="container">
+            <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </a>
+            <a class="brand" href="/">qless</a>
+            <div class="nav-collapse">
+                <ul class="nav nav-bar">
+
+                    <li><a href="/queues">Queues</a></li>
+
+                    <li><a href="/workers">Workers</a></li>
+
+                    <li><a href="/track">Track</a></li>
+
+                    <li><a href="/failed">Failed</a></li>
+
+                    <li><a href="/config">Config</a></li>
+
+                    <li><a href="/about">About</a></li>
+
+                </ul>
+                <ul class="nav nav-bar pull-right">
+                    <li>
+                        <form class="navbar-search" action="/tag">
+                            <input id="tag-search" type="text" class="search-query" placeholder="Search by Tag" data-provide="typeahead" name="tag">
+                        </form>
+                    </li>
+                </ul>
+            </div>
+        </div>
     </div>
+</nav>
     <div id="main"></div>
+
+<script src="http://code.jquery.com/jquery-2.1.4.min.js"></script>
+<script type="text/javascript" src="https://www.google.com/jsapi"></script>
+<script src="./js/jquery.mustache.js"></script>
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mustache.js/2.1.3/mustache.min.js"></script>
+<!-- Latest compiled and minified JavaScript -->
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
+
+<script type="text/javascript">
+    google.load('visualization', "1", {packages: ["corechart"]});
+</script>
+
+<script src="./js/qless-gui.js"></script>
 </body>
 </html>

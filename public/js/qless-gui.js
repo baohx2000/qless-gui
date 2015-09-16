@@ -1,4 +1,4 @@
-
+/* global jQuery */
 var QlessGui = {
     showQueues: function()
     {
@@ -54,8 +54,43 @@ var QlessGui = {
     showQueue: function(el) {
         var name = jQuery(el).text();
         jQuery.get('/api.php?command=status&queue=' + name, function(data) {
-            jQuery('#main').html('Charts will go here');
+            jQuery.Mustache.load('/js/templates/queue-status.mustache')
+                .done(function () {
+                    jQuery('#main').mustache('queue-status', { data : data});
+                    QlessGui.drawChart(data.stats.wait.histogram, 'wait-chart', 'Jobs / Minute');
+                    QlessGui.drawChart(data.stats.run.histogram, 'run-chart', 'Jobs / Minute');
+                });
         });
+    },
+
+    drawChart: function(d, id, title) {
+        var data = new google.visualization.DataTable();
+        data.addColumn('string', 'Time');
+        data.addColumn('number', title);
+
+        var _data = [];
+        var i;
+        for (i = 0; i < 60; ++i) {
+            _data.push([i + ' seconds', d[i] * 60]);
+        }
+        for (i = 1; i < 60; ++i) {
+            _data.push([i + ' minutes', d[59 + i]]);
+        }
+        for (i = 1; i < 24; ++i) {
+            _data.push([i + ' hours', d[118 + i] / 60]);
+        }
+        for (i = 1; i < 7; ++i) {
+            _data.push([i + ' days', d[141 + i] / 1440]);
+        }
+        data.addRows(_data);
+
+        var options = {
+            legend: {position: 'none'},
+            chartArea: { width:"80%", height:"80%" }
+        };
+
+        var chart = new google.visualization.SteppedAreaChart(document.getElementById(id));
+        chart.draw(data, options);
     }
 };
 
