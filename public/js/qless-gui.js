@@ -1,5 +1,14 @@
 /* global jQuery */
 var QlessGui = {
+    showMain: function()
+    {
+        jQuery.Mustache.load('/js/templates/main.mustache')
+            .done(function () {
+                jQuery('#main').mustache('qless-main', {});
+            });
+
+    },
+
     showQueues: function()
     {
         jQuery.get('/api.php?command=queues', function(data) {
@@ -94,6 +103,18 @@ var QlessGui = {
     }
 };
 
-jQuery.ready(function() {
-
-});
+// super simple router
+var match = window.location.href.match(/https?:\/\/[^\/]*(.*)/i);
+switch(match[1]) {
+    case '/':
+        QlessGui.showMain();
+        break;
+    case match[1].match(/queues/):
+        break;
+    case match[1].match(/workers/):
+        break;
+    case '/failed':
+        break;
+    case '/track':
+        break;
+}
