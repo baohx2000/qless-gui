@@ -4,7 +4,7 @@
             <h1>Queues <small>And their job counts</small></h1>
         </div>
 
-        {{#queues}}
+        {{#each queues}}
             <div class="row">
                 <div class="span4">
                     <h3><a href="/queues/{{name}}">{{name}}</a></h3>
@@ -19,6 +19,6 @@
                     </h3>
                 </div>
             </div>
-        {{/queues}}
+        {{/each}}
     </div>
 </script>

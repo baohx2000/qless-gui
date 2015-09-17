@@ -1,10 +1,28 @@
 /* global jQuery */
 var QlessGui = {
+    // recursive function to build "x=y" keys for use in mustache
+    _buildTemplateOptions : function(object)
+    {
+        var validTypes = ['string', 'number', 'boolean'];
+        var value;
+        var key;
+        for (key in object) {
+            value = object[key];
+            if (object.hasOwnProperty(key) && validTypes.indexOf(typeof value) !== -1) {
+                object[key + '::' + value] = true;
+            } else if (typeof value === 'object') {
+                // turtles all the way
+                object[key] = QlessGui._buildTemplateOptions(value);
+            }
+        }
+        return object;
+    },
+
     showMain: function()
     {
-        jQuery.Mustache.load('/js/templates/main.mustache')
-            .done(function () {
-                jQuery('#main').mustache('qless-main', {});
+        jQuery.get('/js/templates/main.handlebars', function(script) {
+                var template = Handlebars.compile(jQuery(script).html());
+                jQuery('#main').html(template());
                 QlessGui.showQueues('#queue-list-container');
                 QlessGui.showFails('#fail-list-container');
                 QlessGui.showWorkers('#worker-list-container');
@@ -15,10 +33,10 @@ var QlessGui = {
     {
         var el = typeof arguments[0] === 'undefined' ? '#main' : arguments[0];
         jQuery.get('/api.php?command=queues', function(data) {
-            jQuery.Mustache.load('/js/templates/queue-list.mustache')
-                .done(function () {
-                    jQuery(el).mustache('queue-list', {queues: data});
-                });
+            jQuery.get('/js/templates/queue-list.handlebars', function(script) {
+                var template = Handlebars.compile(jQuery(script).html());
+                jQuery(el).html(template({queues: QlessGui._buildTemplateOptions(data)}));
+            });
         });
     },
 
@@ -26,10 +44,10 @@ var QlessGui = {
     {
         var el = typeof arguments[0] === 'undefined' ? '#main' : arguments[0];
         jQuery.get('/api.php?command=fails', function(data) {
-            jQuery.Mustache.load('/js/templates/fail-list.mustache')
-                .done(function () {
-                    jQuery(el).mustache('fail-list', {data: data});
-                });
+            jQuery.get('/js/templates/fail-list.handlebars', function(script) {
+                var template = Handlebars.compile(jQuery(script).html());
+                jQuery(el).html(template({queues: QlessGui._buildTemplateOptions(data)}));
+            });
         });
     },
 
@@ -37,10 +55,10 @@ var QlessGui = {
     {
         var el = typeof arguments[0] === 'undefined' ? '#main' : arguments[0];
         jQuery.get('/api.php?command=workers', function(data) {
-            jQuery.Mustache.load('/js/templates/worker-list.mustache')
-                .done(function () {
-                    jQuery(el).mustache('worker-list', {data: data});
-                });
+            jQuery.get('/js/templates/worker-list.handlebars', function(script) {
+                var template = Handlebars.compile(jQuery(script).html());
+                jQuery(el).html(template({data: QlessGui._buildTemplateOptions(data)}));
+            });
         });
     },
 
@@ -59,15 +77,14 @@ var QlessGui = {
         });
     },
 
-    showQueue: function(el) {
-        var name = jQuery(el).text();
+    showQueue: function(name) {
         jQuery.get('/api.php?command=status&queue=' + name, function(data) {
-            jQuery.Mustache.load('/js/templates/queue-status.mustache')
-                .done(function () {
-                    jQuery('#main').mustache('queue-status', { data : data});
-                    QlessGui.drawChart(data.stats.wait.histogram, 'wait-chart', 'Jobs / Minute');
-                    QlessGui.drawChart(data.stats.run.histogram, 'run-chart', 'Jobs / Minute');
-                });
+            jQuery.get('/js/templates/queue-status.handlebars', function(script) {
+                var template = Handlebars.compile(jQuery(script).html());
+                jQuery('#main').html(template({data: QlessGui._buildTemplateOptions(data)}));
+                QlessGui.drawChart(data.stats.wait.histogram, 'wait-chart', 'Jobs / Minute');
+                QlessGui.drawChart(data.stats.run.histogram, 'run-chart', 'Jobs / Minute');
+            });
         });
     },
 
@@ -102,8 +119,31 @@ var QlessGui = {
     }
 };
 
+Handlebars.registerHelper('json', function (json) {
+    if (typeof json != 'string') {
+        json = JSON.stringify(json, undefined, 2);
+    }
+    json = json.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+    return json.replace(/("(\\u[a-zA-Z0-9]{4}|\\[^u]|[^\\"])*"(\s*:)?|\b(true|false|null)\b|-?\d+(?:\.\d*)?(?:[eE][+\-]?\d+)?)/g, function (match) {
+        var cls = 'number';
+        if (/^"/.test(match)) {
+            if (/:$/.test(match)) {
+                cls = 'key';
+            } else {
+                cls = 'string';
+            }
+        } else if (/true|false/.test(match)) {
+            cls = 'boolean';
+        } else if (/null/.test(match)) {
+            cls = 'null';
+        }
+        return '<span class="' + cls + '">' + match + '</span>';
+    });
+});
+
 // super simple router
 var match = window.location.href.match(/https?:\/\/[^\/]*(.*)/i);
+
 switch(match[1]) {
     case '':
     case '/':
@@ -112,12 +152,23 @@ switch(match[1]) {
     case '/queues':
         QlessGui.showQueues();
         break;
-    case match[1].match(/queues/):
-        break;
-    case match[1].match(/workers/):
+    case '/workers':
         break;
     case '/failed':
         break;
     case '/track':
+        break;
+    default:
+        if (match[1].match(/\/queues\/.*/)) {
+            var q = match[1].match(/queues\/(.*)/)[1];
+            QlessGui.showQueue(q);
+            break;
+        }
+        if (match[1].match(/\/workers\/.*/)) {
+
+        }
+        if (match[1].match(/\/jobs\/.*/)) {
+
+        }
         break;
 }

@@ -2,7 +2,7 @@
 <div class="page-header">
     <h1>Current Workers <small>And their job counts</small></h1>
 </div>
-{{#data}}
+{{#each data}}
 <div class="row">
     <div class="span4">
         <h3><a href="/workers/{{name}}">{{name}}</a></h3>
@@ -11,5 +11,5 @@
         <h3>| {{jobs}} / {{stalled}} <small>Running / Stalled</small></h3>
     </div>
 </div>
-{{/data}}
+{{/each}}
 </script>
