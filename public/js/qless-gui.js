@@ -81,7 +81,7 @@ var QlessGui = {
         jQuery.get('/api.php?command=status&queue=' + name, function(data) {
             jQuery.get('/js/templates/queue-status.handlebars', function(script) {
                 var template = Handlebars.compile(jQuery(script).html());
-                jQuery('#main').html(template({data: QlessGui._buildTemplateOptions(data)}));
+                jQuery('#main').html(template(QlessGui._buildTemplateOptions(data)));
                 QlessGui.drawChart(data.stats.wait.histogram, 'wait-chart', 'Jobs / Minute');
                 QlessGui.drawChart(data.stats.run.histogram, 'run-chart', 'Jobs / Minute');
             });
@@ -153,6 +153,7 @@ switch(match[1]) {
         QlessGui.showQueues();
         break;
     case '/workers':
+        QlessGui.showWorkers();
         break;
     case '/failed':
         break;

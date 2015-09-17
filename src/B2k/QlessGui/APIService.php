@@ -41,10 +41,11 @@ class APIService
 
     public function queueStatus($queue)
     {
-        return [
+        $data = json_decode($this->client->queues($queue), true);
+        return array_merge($data, [
             'stats' => json_decode($this->client->getQueue($queue)->stats()),
             'length' => $this->queueLength($queue),
-        ];
+        ]);
     }
 
     public function getJobs()
