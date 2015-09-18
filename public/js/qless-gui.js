@@ -1,4 +1,4 @@
-/* global jQuery */
+/* global jQuery, Handlebars */
 var QlessGui = {
     // recursive function to build "x=y" keys for use in mustache
     _buildTemplateOptions : function(object)
@@ -27,6 +27,23 @@ var QlessGui = {
                 QlessGui.showFails('#fail-list-container');
                 QlessGui.showWorkers('#worker-list-container');
             });
+    },
+
+    showAbout: function()
+    {
+        jQuery.get('/js/templates/about.handlebars', function(html) {
+            jQuery('#main').html(html);
+        });
+    },
+
+    showConfig: function()
+    {
+        jQuery.get('/api.php?command=config', function(data) {
+            jQuery.get('/js/templates/config.handlebars', function(script) {
+                var template = Handlebars.compile(jQuery(script).html());
+                jQuery('#main').html(template({options: data}));
+            });
+        });
     },
 
     showQueues: function()
@@ -171,11 +188,17 @@ switch(match[1]) {
     case '/':
         QlessGui.showMain();
         break;
+    case '/config':
+        QlessGui.showConfig();
+        break;
     case '/queues':
         QlessGui.showQueues();
         break;
     case '/workers':
         QlessGui.showWorkers();
+        break;
+    case '/about':
+        QlessGui.showAbout();
         break;
     case '/failed':
         break;

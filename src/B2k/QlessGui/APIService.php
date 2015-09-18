@@ -88,8 +88,7 @@ class APIService
 
     public function workers()
     {
-        $out = $this->client->workers();
-        return json_decode($out, true);
+        return json_decode($this->client->lua->run('workers', []), true);
     }
 
     public function worker($workerName)
@@ -104,5 +103,10 @@ class APIService
             $workerData['stalled'] = json_decode($results, true);
         }
         return $workerData;
+    }
+
+    public function getConfig()
+    {
+        return $this->client->{"config.get"}();
     }
 }

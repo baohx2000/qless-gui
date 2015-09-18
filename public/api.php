@@ -5,6 +5,9 @@ $service = new \B2k\QlessGui\APIService();
 $response = null;
 
 switch ($_REQUEST['command']) {
+    case 'config':
+        $response = $service->getConfig();
+        break;
     case 'queues':
         $response = $service->getQueues();
         break;
