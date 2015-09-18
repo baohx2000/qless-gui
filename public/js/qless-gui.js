@@ -62,6 +62,16 @@ var QlessGui = {
         });
     },
 
+    showWorker: function(workerName)
+    {
+        jQuery.get('/api.php?command=worker&worker='+workerName, function(data) {
+            jQuery.get('/js/templates/worker.handlebars', function(script) {
+                var template = Handlebars.compile(jQuery(script).html());
+                jQuery('#main').html(template({worker: QlessGui._buildTemplateOptions(data)}));
+            });
+        });
+    },
+
     showJobs: function()
     {
         jQuery.get('/api.php?command=jobs', function(data) {
@@ -119,6 +129,18 @@ var QlessGui = {
     }
 };
 
+Handlebars.registerHelper('shorten', function(str) {
+    var len = arguments[1] || 20;
+    if (str.length < len) {
+        return str;
+    }
+    return str.substring(0, len) + '...';
+});
+
+Handlebars.registerHelper('relTimeStamp', function(stamp) {
+    return moment.unix(stamp).fromNow();
+});
+
 Handlebars.registerHelper('json', function (json) {
     if (typeof json != 'string') {
         json = JSON.stringify(json, undefined, 2);
@@ -161,12 +183,14 @@ switch(match[1]) {
         break;
     default:
         if (match[1].match(/\/queues\/.*/)) {
-            var q = match[1].match(/queues\/(.*)/)[1];
-            QlessGui.showQueue(q);
+            var qName = match[1].match(/queues\/(.*)/)[1];
+            QlessGui.showQueue(qName);
             break;
         }
         if (match[1].match(/\/workers\/.*/)) {
-
+            var workerName = match[1].match(/workers\/(.*)/)[1];
+            QlessGui.showWorker(workerName);
+            break;
         }
         if (match[1].match(/\/jobs\/.*/)) {
 

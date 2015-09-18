@@ -23,6 +23,9 @@ switch ($_REQUEST['command']) {
     case 'workers':
         $response = json_encode($service->workers());
         break;
+    case 'worker':
+        $response = json_encode($service->worker($_REQUEST['worker']));
+        break;
     case 'jobs':
         $response = json_encode($service->getJobs());
         break;

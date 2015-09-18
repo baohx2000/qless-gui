@@ -91,4 +91,18 @@ class APIService
         $out = $this->client->workers();
         return json_decode($out, true);
     }
+
+    public function worker($workerName)
+    {
+        $workerData = json_decode($this->client->workers($workerName), true);
+        if (!empty($workerData['jobs'])) {
+            $results = call_user_func_array([$this->client, 'multiget'], $workerData['jobs']);
+            $workerData['jobs'] = json_decode($results, true);
+        }
+        if (!empty($workerData['stalled'])) {
+            $results = call_user_func_array([$this->client, 'multiget'], $workerData['stalled']);
+            $workerData['stalled'] = json_decode($results, true);
+        }
+        return $workerData;
+    }
 }
