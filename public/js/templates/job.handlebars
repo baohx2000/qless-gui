@@ -1,0 +1,12 @@
+<script type="text/x-handlebars-template">
+{{#if job}}
+    <%= erb :_job, :layout => false, :locals => { :job => job, :queues => queues } %>
+{{else}}
+    <div class="row">
+        <div class="span12">
+            <h2><%= jid %> doesn't exist, was canceled, or expired</h2>
+        </div>
+    </div>
+{{/if}}
+
+</script>

@@ -1,4 +1,5 @@
 /* global jQuery, Handlebars */
+var queues;
 var QlessGui = {
     // recursive function to build "x=y" keys for use in mustache
     _buildTemplateOptions : function(object)
@@ -84,8 +85,10 @@ var QlessGui = {
         jQuery.get('/api.php?command=worker&worker='+workerName, function(data) {
             jQuery.get('/js/templates/worker.handlebars', function(script) {
                 var template = Handlebars.compile(jQuery(script).html());
-                console.log(QlessGui._buildTemplateOptions(data));
-                jQuery('#main').html(template({worker: QlessGui._buildTemplateOptions(data)}));
+                jQuery('#main').html(template({
+                    worker: QlessGui._buildTemplateOptions(data),
+                    queues: queues
+                }));
             });
         });
     },
@@ -182,6 +185,19 @@ Handlebars.registerHelper('json', function (json) {
         return '<span class="' + cls + '">' + match + '</span>';
     });
 });
+
+jQuery.get('/js/templates/job-partial.handlebars', function(script) {
+    Handlebars.registerPartial('JOB', jQuery(script).html());
+});
+jQuery.get('/api.php?command=queues', function(data) {
+    queues = data;
+});
+var fade = function(jid, type)
+{
+    if (type === 'cancel') {
+        jQuery('#job-' + jid).slideUp();
+    }
+};
 
 // super simple router
 var match = window.location.href.match(/https?:\/\/[^\/]*(.*)/i);

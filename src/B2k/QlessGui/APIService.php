@@ -94,6 +94,7 @@ class APIService
     public function worker($workerName)
     {
         $workerData = json_decode($this->client->lua->run('workers', [$workerName]), true);
+        $workerData['name'] = $workerName;
         if (!empty($workerData['jobs'])) {
             $results = call_user_func_array([$this->client, 'multiget'], $workerData['jobs']);
             $workerData['jobs'] = json_decode($results, true);
