@@ -6,3 +6,5 @@ pre {outline: 1px solid #ccc; padding: 5px; margin: 5px; }
 .key { color: red; }
 
 input.left { float: left; }
+
+code { display: block; }

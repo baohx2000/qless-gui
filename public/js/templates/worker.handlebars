@@ -132,22 +132,14 @@
             <h3><small>History</small></h3>
             <div style="overflow-y:scroll; height: 200px">
                 {{#each job.history as |h|}}
-                <pre><strong>{{h.what}}</strong> at {{relTimeStamp h.when}}
-                    {{#if h.what:put}}
-                        in queue <strong>{{h.q}}</strong>
+                <code><strong>{{h.what}}</strong> at {{relTimeStamp h.when}}
+                    {{#if h.what::put}} in queue <strong>{{h.q}}</strong>{{/if}}
+                    {{#if h.what::popped}} by <strong>{{h.worker}}</strong>{{/if}}
+                    {{#if h.what::failed}}
+                        {{#if h.worker}} by <strong>{{h.worker}}</strong> in group <strong>{{h.group}}</strong>
+                        {{else}} in group <strong>{{h.group}}</strong>{{/if}}
                     {{/if}}
-                    {{#if h.what:popped}}
-                        by <strong>{{h.worker}}</strong>
-                    {{/if}}
-                    {{#if h.what:failed}}
-                        {{#if h.worker}}
-                            by <strong>{{h.worker}}</strong>
-                            in group <strong>{{h.group}}</strong>
-                        {{else}}
-                            in group <strong>{{h.group}}</strong>
-                        {{/if}}
-                    {{/if}}
-                </pre>
+                </code>
                 {{/each}}
             </div>
         </div>
