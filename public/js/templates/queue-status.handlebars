@@ -11,11 +11,13 @@
         </ul>
     </div>
 
-    {{#if jobs}}<hr />{{/if}}
+    {{#if jobs}}<hr />
     {{#each jobs as |job|}}
+        {{reverseHistory job}}
         {{> JOB}}
     {{/each}}
 
+    {{else}}
     <div class="row">
         <div class="span8">
             <h2><a href="/queues/{{name}}">{{name}}</a> |
@@ -82,5 +84,5 @@
             </div>
         </div>
     </div>
-
+    {{/if}}
 </script>

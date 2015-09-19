@@ -1,5 +1,6 @@
 <script type="text/x-handlebars-template">
 {{#if job}}
+    {{reverseHistory job}}
     {{#with job}}
         {{> JOB}}
     {{/with}}

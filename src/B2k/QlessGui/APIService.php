@@ -42,6 +42,14 @@ class APIService
     public function queueStatus($queue, $jobState)
     {
         $data = json_decode($this->client->queues($queue), true);
+        if ($jobState) {
+            if ($jobState === 'waiting') {
+                $data['jobs'] = json_decode($this->client->lua->run('peek', [$queue, 25]), true);
+            } else {
+                $jobs = $this->client->lua->run('jobs', [$jobState, $queue, 0, 25]);
+                $data['jobs'] = json_decode($this->client->lua->run('multiget', $jobs), true);
+            }
+        }
         return array_merge($data, [
             'stats' => json_decode($this->client->getQueue($queue)->stats()),
             'length' => $this->queueLength($queue),

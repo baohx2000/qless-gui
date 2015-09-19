@@ -13,6 +13,7 @@
     {{/if}}
 
     {{#each worker.jobs as |job|}}
+        {{reverseHistory job}}
         {{> JOB}}
     {{/each}}
 
@@ -22,6 +23,7 @@
         </div>
 
         {{#each worker.stalled as |job|}}
+            {{reverseHistory job}}
             {{> JOB}}
         {{/each}}
     {{/if}}

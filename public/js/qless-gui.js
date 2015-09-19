@@ -112,7 +112,9 @@ var QlessGui = {
         jQuery.get('/api.php?command=status&queue=' + name + '&jobState=' + jobState, function(data) {
             jQuery.get('/js/templates/queue-status.handlebars', function(script) {
                 var template = Handlebars.compile(jQuery(script).html());
-                jQuery('#main').html(template(QlessGui._buildTemplateOptions(data)));
+                data = QlessGui._buildTemplateOptions(data);
+                data.queues = queues;
+                jQuery('#main').html(template(data));
                 QlessGui.drawChart(data.stats.wait.histogram, 'wait-chart', 'Jobs / Minute');
                 QlessGui.drawChart(data.stats.run.histogram, 'run-chart', 'Jobs / Minute');
             });
@@ -169,6 +171,10 @@ Handlebars.registerHelper('shorten', function(str) {
 
 Handlebars.registerHelper('relTimeStamp', function(stamp) {
     return moment.unix(stamp).fromNow();
+});
+
+Handlebars.registerHelper('reverseHistory', function(job) {
+    job.history = job.history.reverse();
 });
 
 Handlebars.registerHelper('json', function (json) {
