@@ -24,6 +24,9 @@ switch ($_REQUEST['command']) {
         }
         $response = json_encode($service->queueStatus($_REQUEST['queue'], $jobState));
         break;
+    case 'tracked':
+        $response = json_encode($service->getTracked());
+        break;
     case 'completed':
         $response = json_encode($service->completedJobs());
         break;

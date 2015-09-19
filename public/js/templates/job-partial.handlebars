@@ -117,7 +117,7 @@
                 <div class="span6">
                     <h3><small>History</small></h3>
                     <div style="overflow-y:scroll; height: 200px">
-                        {{#each history as |h|}}
+                        {{#eachReverse history 'h'}}
                             <code><strong>{{h.what}}</strong> at {{relTimeStamp h.when}}
                                 {{#if h.what::put}} in queue <strong>{{h.q}}</strong>{{/if}}
                                 {{#if h.what::popped}} by <strong>{{h.worker}}</strong>{{/if}}
@@ -126,7 +126,7 @@
                                     {{else}} in group <strong>{{h.group}}</strong>{{/if}}
                                 {{/if}}
                             </code>
-                        {{/each}}
+                        {{/eachReverse}}
                     </div>
                 </div>
             </div>

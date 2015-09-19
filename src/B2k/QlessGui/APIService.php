@@ -134,4 +134,10 @@ class APIService
                 break;
         }
     }
+
+    public function getTracked()
+    {
+        $jobs = json_decode($this->client->lua->run('track', []));
+        return $jobs;
+    }
 }

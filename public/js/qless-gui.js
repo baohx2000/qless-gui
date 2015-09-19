@@ -1,4 +1,4 @@
-/* global jQuery, Handlebars */
+/* global jQuery, Handlebars, _ */
 var queues;
 var QlessGui = {
     // recursive function to build "x=y" keys for use in mustache
@@ -65,6 +65,17 @@ var QlessGui = {
             jQuery.get('/js/templates/fail-list.handlebars', function(script) {
                 var template = Handlebars.compile(jQuery(script).html());
                 jQuery(el).html(template({failed: data}));
+            });
+        });
+    },
+
+    showTracked: function()
+    {
+        var el = typeof arguments[0] === 'undefined' ? '#main' : arguments[0];
+        jQuery.get('/api.php?command=tracked', function(data) {
+            jQuery.get('/js/templates/job-list.handlebars', function(script) {
+                var template = Handlebars.compile(jQuery(script).html());
+                jQuery(el).html(template({tracked: data}));
             });
         });
     },
@@ -191,8 +202,35 @@ Handlebars.registerHelper('relTimeStamp', function(stamp) {
     return moment.unix(stamp).fromNow();
 });
 
-Handlebars.registerHelper('reverseHistory', function(job) {
-    job.history = job.history.reverse();
+Handlebars.registerHelper('eachReverse', function(items, keyName, block) {
+    var s = '';
+    items = items.reverse();
+    for (var i in items) {
+        var obj = {};
+        obj[keyName] = items[i];
+        s += block.fn(obj);
+    }
+    return s;
+});
+Handlebars.registerHelper('eachJobByState', function(a, state, block) {
+    var s = '';
+    for (var i in a) {
+        if (a[i].state == state) {
+            s += block(a[i]);
+        }
+    }
+
+    return s;
+});
+
+Handlebars.registerHelper('countJobsByState', function(jobs, state) {
+    var x = 0;
+    for (var i in jobs) {
+        if (jobs[i].state === state) {
+            x++;
+        }
+    }
+    return x;
 });
 
 Handlebars.registerHelper('json', function (json) {
