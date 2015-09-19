@@ -108,14 +108,23 @@ var QlessGui = {
         });
     },
 
-    showQueue: function(name) {
-        jQuery.get('/api.php?command=status&queue=' + name, function(data) {
+    showQueue: function(name, jobState) {
+        jQuery.get('/api.php?command=status&queue=' + name + '&jobState=' + jobState, function(data) {
             jQuery.get('/js/templates/queue-status.handlebars', function(script) {
                 var template = Handlebars.compile(jQuery(script).html());
                 jQuery('#main').html(template(QlessGui._buildTemplateOptions(data)));
                 QlessGui.drawChart(data.stats.wait.histogram, 'wait-chart', 'Jobs / Minute');
                 QlessGui.drawChart(data.stats.run.histogram, 'run-chart', 'Jobs / Minute');
             });
+        });
+    },
+
+    showJob: function(jid) {
+        jQuery.get('/api.php?command=job&jid=' + jid, function(data) {
+            jQuery.get('/js/templates/job.handlebars', function(script) {
+                var template = Handlebars.compile(jQuery(script).html());
+                jQuery('#main').html(template(QlessGui._buildTemplateOptions({jid: jid, job: data, queues: queues})));
+            })
         });
     },
 
@@ -225,8 +234,13 @@ switch(match[1]) {
         break;
     default:
         if (match[1].match(/\/queues\/.*/)) {
-            var qName = match[1].match(/queues\/(.*)/)[1];
-            QlessGui.showQueue(qName);
+            var qName = match[1].match(/queues\/([^\/]*)/)[1];
+            var jobState;
+            var stateMatch = match[1].match(/queues\/[^\/]*\/(.*)/);
+            if (stateMatch) {
+                jobState = stateMatch[1];
+            }
+            QlessGui.showQueue(qName, jobState);
             break;
         }
         if (match[1].match(/\/workers\/.*/)) {
@@ -235,7 +249,9 @@ switch(match[1]) {
             break;
         }
         if (match[1].match(/\/jobs\/.*/)) {
-
+            var jid = match[1].match(/jobs\/#(.*)/)[1];
+            QlessGui.showJob(jid);
+            break;
         }
         break;
 }

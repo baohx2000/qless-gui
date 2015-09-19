@@ -15,7 +15,14 @@ switch ($_REQUEST['command']) {
         $response = json_encode($service->failedJobs());
         break;
     case 'status':
-        $response = json_encode($service->queueStatus($_REQUEST['queue']));
+        $jobState = null;
+        if (array_key_exists('jobState', $_REQUEST)) {
+            $state = $_REQUEST['jobState'];
+            if ($state !== 'undefined' && $state !== 'stats') {
+                $jobState = $state;
+            }
+        }
+        $response = json_encode($service->queueStatus($_REQUEST['queue'], $jobState));
         break;
     case 'completed':
         $response = json_encode($service->completedJobs());
@@ -31,6 +38,9 @@ switch ($_REQUEST['command']) {
         break;
     case 'jobs':
         $response = json_encode($service->getJobs());
+        break;
+    case 'job':
+        $response = json_encode($service->getJob($_REQUEST['jid']));
         break;
 }
 

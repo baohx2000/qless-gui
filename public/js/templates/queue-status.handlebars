@@ -1,4 +1,21 @@
 <script id="queue-status" type="text/x-handlebars-template">
+    <div class="subnav subnav-fixed">
+        <ul class="nav nav-pills">
+            <li class="{{#if tab::stats}}active{{/if}}"><a href="/queues/{{name}}/stats">Stats</a></li>
+            <li class="{{#if tab::running}}active{{/if}}"><a href="/queues/{{name}}/running">Running</a></li>
+            <li class="{{#if tab::waiting}}active{{/if}}"><a href="/queues/{{name}}/waiting">Waiting</a></li>
+            <li class="{{#if tab::scheduled}}active{{/if}}"><a href="/queues/{{name}}/scheduled">Scheduled</a></li>
+            <li class="{{#if tab::stalled}}active{{/if}}"><a href="/queues/{{name}}/stalled">Stalled</a></li>
+            <li class="{{#if tab::depends}}active{{/if}}"><a href="/queues/{{name}}/depends">Depends</a></li>
+            <li class="{{#if tab::recurring}}active{{/if}}"><a href="/queues/{{name}}/recurring">Recurring</a></li>
+        </ul>
+    </div>
+
+    {{#if jobs}}<hr />{{/if}}
+    {{#each jobs as |job|}}
+        {{> JOB}}
+    {{/each}}
+
     <div class="row">
         <div class="span8">
             <h2><a href="/queues/{{name}}">{{name}}</a> |

@@ -39,7 +39,7 @@ class APIService
         return $this->client->queues();
     }
 
-    public function queueStatus($queue)
+    public function queueStatus($queue, $jobState)
     {
         $data = json_decode($this->client->queues($queue), true);
         return array_merge($data, [
@@ -55,6 +55,11 @@ class APIService
             'scheduled' => $this->scheduledJobs(),
             'failed'    => $this->failedJobs(),
         ];
+    }
+
+    public function getJob($jid)
+    {
+        return json_decode($this->client->lua->run('get', [$jid]), true);
     }
 
     public function completedJobs($start = 0, $count = 25)
