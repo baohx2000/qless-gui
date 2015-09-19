@@ -11,7 +11,7 @@ switch ($_REQUEST['command']) {
     case 'queues':
         $response = $service->getQueues();
         break;
-    case 'fails':
+    case 'failed':
         $response = json_encode($service->failedJobs());
         break;
     case 'status':
@@ -41,6 +41,9 @@ switch ($_REQUEST['command']) {
         break;
     case 'job':
         $response = json_encode($service->getJob($_REQUEST['jid']));
+        break;
+    default:
+        $response = $service->run($_REQUEST['command']);
         break;
 }
 

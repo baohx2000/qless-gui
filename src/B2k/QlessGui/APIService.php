@@ -91,7 +91,7 @@ class APIService
             return $out;
         }
 
-        return $this->client->failed($type, 0, 25);
+        return $this->client->failed($type, $page-1*25, $page*25);
     }
 
     public function queueLength($queue)
@@ -122,5 +122,16 @@ class APIService
     public function getConfig()
     {
         return $this->client->{"config.get"}();
+    }
+
+    public function run($command)
+    {
+        switch ($command) {
+            case 'track':
+            case 'untrack':
+                $jid = $_REQUEST['jid'];
+                return json_decode($this->client->lua->run('track', [$command, $jid]), true);
+                break;
+        }
     }
 }

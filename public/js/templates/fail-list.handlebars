@@ -1,29 +1,51 @@
 <script type="text/x-handlebars-template" id="fail-list">
-{{#if data.length}}
-<div class="page-header">
-    <h1>Failed Jobs <small>D'oh!</small></h1>
-</div>
-<div class="l-sidebyside failed-job">
-    <div class="min-col-size">
-{{else}}
-<div class="page-header">
-    <h1>No Failed Jobs <small>Yey!</small></h1>
-</div>
-{{/if}}
-{{#each data}}
-    <div class="row">
-        <h3><a href="/failed/{{name}}">{{name}}</a></h3>
+    <div class="subnav subnav-fixed">
+        <ul class="nav nav-pills">
+            {{#each failed as |f| }}
+                <li><a href="#{{f.name}}" data-toggle="tab">{{f.name}} ({{f.count}})</a></li>
+            {{/each}}
+        </ul>
     </div>
-{{/each}}
+
+    <div id="alerts" style="margin-top: 40px"></div>
+
+    {{#if failed}}
+        <div class="page-header">
+            <h1>Failed Jobs <small>Failure is a Part of Success!</small></h1>
         </div>
-        <div>
-{{#each data}}
-    <div class="row">
-        <h3>| {{count}} <small>Jobs</small></h3>
+    {{else}}
+        <div class="page-header">
+            <h1>No Failed Jobs <small>You Have Done Well!</small></h1>
+        </div>
+    {{/if}}
+
+    <div class="tab-content">
+        {{#each failed as |f|}}
+            <div class="tab-pane active" id="{{f.name}}">
+                <div class="page-header">
+                    <div class="row">
+                        <div class="span8">
+                            <h2>
+                                <a href="/failed/#{{f.name}}">{{f.name}}</a> | {{f.count}} <small>Jobs</small>
+                            </h2>
+                        </div>
+                        <div class="span4">
+                            <div class="btn-group" style="float:right; margin-top: 5px">
+                                <button class="btn btn-danger" title="cancel" onclick="confirm(this, 'Cancel?', function() { QlessActions.cancelall('{{f.name}}', fade) })"><i class="icon-remove"></i></button>
+                                <button class="btn btn-success" title="retry all" onclick="QlessActions.retryall('{{f.name}}', fade)"><i class="icon-repeat"></i></button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="span12">
+                        <% f['jobs'][0..5].each do |job| %>
+                        <%= erb :_job, :layout => false, :locals => { :job => job, :queues => queues, :brief => true } %>
+                        <% end %>
+                    </div>
+                </div>
+            </div>
+        {{/each}}
     </div>
-{{/each}}
-{{#if data.length}}
-    </div>
-</div>
-{{/if}}
+
 </script>

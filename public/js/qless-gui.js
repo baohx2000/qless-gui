@@ -61,10 +61,10 @@ var QlessGui = {
     showFails: function()
     {
         var el = typeof arguments[0] === 'undefined' ? '#main' : arguments[0];
-        jQuery.get('/api.php?command=fails', function(data) {
+        jQuery.get('/api.php?command=failed', function(data) {
             jQuery.get('/js/templates/fail-list.handlebars', function(script) {
                 var template = Handlebars.compile(jQuery(script).html());
-                jQuery(el).html(template({queues: QlessGui._buildTemplateOptions(data)}));
+                jQuery(el).html(template({failed: data}));
             });
         });
     },
@@ -161,6 +161,24 @@ var QlessGui = {
     }
 };
 
+var QlessActions = {
+    track: function(jid) {
+        return jQuery.post('/api.php?command=track&jid=' + jid, window.location.reload);
+    },
+
+    untrack: function(jid) {
+        return jQuery.post('/api.php?command=untrack&jid=' + jid, window.location.reload);
+    },
+
+    cancel: function(jid) {
+        return jQuery.post('/api.php?command=cancel&jid=' + jid, window.location.reload);
+    },
+
+    move: function(jid, queue) {
+        return jQuery.post('/api.php?command=move&jid=' + jid + '&queue=' + queue, window.location.reload);
+    }
+};
+
 Handlebars.registerHelper('shorten', function(str) {
     var len = arguments[1] || 20;
     if (str.length < len) {
@@ -235,8 +253,10 @@ switch(match[1]) {
         QlessGui.showAbout();
         break;
     case '/failed':
+        QlessGui.showFails();
         break;
     case '/track':
+        QlessGui.showTracked();
         break;
     default:
         if (match[1].match(/\/queues\/.*/)) {
@@ -255,7 +275,7 @@ switch(match[1]) {
             break;
         }
         if (match[1].match(/\/jobs\/.*/)) {
-            var jid = match[1].match(/jobs\/#(.*)/)[1];
+            var jid = match[1].match(/jobs\/(.*)/)[1];
             QlessGui.showJob(jid);
             break;
         }

@@ -4,7 +4,7 @@
             <div class="row">
                 <div class="span6">
                     <h2 style="text-overflow: ellipsis; white-space: nowrap; overflow: hidden">
-                        <a href="/jobs/#{{jid}}" title="{{jid}}">{{shorten jid 10}}</a> | <span title="{{klass}}">{{shorten klass 50}}</span>
+                        <a href="/jobs/{{jid}}" title="{{jid}}">{{shorten jid 10}}</a> | <span title="{{klass}}">{{shorten klass 50}}</span>
                     </h2>
                 </div>
                 <div class="span3">
@@ -21,28 +21,28 @@
                     <div style="float:right; margin-top: 4px">
                         <div class="btn-group">
                             {{#if state::complete}}{{else}}
-                                <button title="delete" class="btn btn-danger" onclick="confirmation(this, 'Delete?', function() { cancel('{{jid}}', fade) })"><i class="icon-remove"></i></button>
+                                <button title="delete" class="btn btn-danger" onclick="confirm('Delete?', function() { QlessActions.cancel('{{jid}}', fade) })"><i class="icon-remove"></i></button>
                             {{/if}}
                             {{#if state::running}}
-                                <button title="Time out job" class="btn btn-danger" onclick="confirmation(this, 'Time out job?', function() { timeout('{{jid}}') })"><i class="icon-time"></i></button>
+                                <button title="Time out job" class="btn btn-danger" onclick="confirm('Time out job?', function() { QlessActions.timeout('{{jid}}') })"><i class="icon-time"></i></button>
                             {{/if}}
-                            <button title="track" class="btn {{#if tracked::active}}active{{/if}}" data-toggle="button" onclick="$(this).hasClass('active') ? untrack('{{jid}}', fade) : track('{{jid}}', [], fade)"><i class="icon-flag"></i></button>
+                            <button title="track" class="btn {{#if tracked}}active{{/if}}" data-toggle="button" onclick="$(this).hasClass('active') ? QlessActions.untrack('{{jid}}', fade) : QlessActions.track('{{jid}}', [], fade)"><i class="icon-flag"></i></button>
                             {{#if state::failed}}
-                                <button title="requeue" class="btn btn-success" onclick="retry('{{jid}}', fade)"><i class="icon-repeat"></i></button>
+                                <button title="requeue" class="btn btn-success" onclick="QlessActions.retry('{{jid}}', fade)"><i class="icon-repeat"></i></button>
                             {{/if}}
                             <button title="move" class="btn dropdown-toggle btn-success" data-toggle="dropdown">
                                 <i class="caret"></i>
                             </button>
                             <ul class="dropdown-menu">
                                 {{#each @root.queues as |queue|}}
-                                    <a href="#" onclick="move('{{jid}}', '{{queue.name}}', fade)">{{queue.name}}</a>
+                                    <a href="#" onclick="QlessActions.move('{{jid}}', '{{queue.name}}', fade)">{{queue.name}}</a>
                                 {{/each}}
                             </ul>
                         </div>
                     </div>
                     <div style="float:right; margin-right: 12px; margin-top: 4px">
                         <div class="btn-group">
-                            <input class="span1 priority left" type="text" placeholder="Pri {{priority}}" onchange="priority('{{jid}}', $(this).val())"/>
+                            <input class="span1 priority left" type="text" placeholder="Pri {{priority}}" onchange="QlessActions.priority('{{jid}}', $(this).val())"/>
                             <button class="btn dropdown-toggle" data-toggle="dropdown">
                                 <i class="caret"></i>
                             </button>
