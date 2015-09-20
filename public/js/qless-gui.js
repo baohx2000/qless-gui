@@ -213,6 +213,10 @@ var QlessActions = {
 
     move: function(jid, queue) {
         return jQuery.post('/api.php?command=move&jid=' + jid + '&queue=' + queue, function() {window.location.reload(); });
+    },
+
+    priority: function(jid, priority) {
+        return jQuery.post('/api.php?command=priority&jid=' + jid + '&priority=' + priority, function() {window.location.reload(); });
     }
 };
 

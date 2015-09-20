@@ -155,6 +155,9 @@ class APIService
             case 'move':
                 $this->retryJob($_REQUEST['jid'], $_REQUEST['queue']);
                 return true;
+            case 'priority':
+                $this->client->lua->run('priority', [$_REQUEST['jid'], $_REQUEST['priority']]);
+                return true;
         }
         throw new \Exception('Invalid command: '.$command);
     }
