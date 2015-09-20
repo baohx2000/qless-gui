@@ -131,17 +131,17 @@
                 </div>
             </div>
 
-            {{#if failure.length}}
-                <div class="row">
-                    <div class="span12">
-                        <div class="alert alert-error">
-                            <p>In <strong>{{queue}}</strong> on <strong>{{failure.worker}}</strong>
-                                about {{failure.when}}
-                            </p>
-                            <pre>{{failure.message}}</pre>
+            {{#if failure}}
+                    <div class="row">
+                        <div class="span12">
+                            <div class="alert alert-error">
+                                <p>In <strong>{{queue}}</strong> on <strong>{{failure.worker}}</strong>
+                                    about {{relTimeStamp failure.when}}
+                                </p>
+                                <pre>{{failure.message}}</pre>
+                            </div>
                         </div>
                     </div>
-                </div>
             {{/if}}
             <hr/>
         </div>

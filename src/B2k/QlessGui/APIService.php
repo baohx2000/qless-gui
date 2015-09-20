@@ -82,16 +82,25 @@ class APIService
 
     public function failedJobs($type = false, $page = 1)
     {
-        if (!$type) {
-            $types = json_decode($this->client->failed(), true);
-            $out = [];
-            foreach ($types as $name => $count) {
-                $out[] = ['name' => $name, 'count' => $count];
-            }
-            return $out;
+        $out = [
+            'failed' => [],
+            'jobs' => [],
+        ];
+        $types = json_decode($this->client->failed(), true);
+        foreach ($types as $name => $count) {
+            $out['failed'][] = ['name' => $name, 'count' => $count];
         }
 
-        return $this->client->failed($type, $page-1*25, $page*25);
+        if (!$type && isset($_REQUEST['type'])) {
+            $type = $_REQUEST['type'];
+        }
+        if ($type) {
+            $jobs = json_decode($this->client->failed($type, ($page-1) * 25, $page * 25), true)['jobs'];
+            $results = call_user_func_array([$this->client, 'multiget'], $jobs);
+            $out['jobs'] = json_decode($results, true);
+        }
+
+        return $out;
     }
 
     public function queueLength($queue)

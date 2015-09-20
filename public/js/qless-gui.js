@@ -25,7 +25,7 @@ var QlessGui = {
                 var template = Handlebars.compile(jQuery(script).html());
                 jQuery('#main').html(template());
                 QlessGui.showQueues('#queue-list-container');
-                QlessGui.showFails('#fail-list-container');
+                QlessGui.showFailed(undefined, '#fail-list-container');
                 QlessGui.showWorkers('#worker-list-container');
             });
     },
@@ -58,15 +58,25 @@ var QlessGui = {
         });
     },
 
-    showFails: function()
+    showFailed: function()
     {
-        var el = typeof arguments[0] === 'undefined' ? '#main' : arguments[0];
-        jQuery.get('/api.php?command=failed', function(data) {
-            jQuery.get('/js/templates/fail-list.handlebars', function(script) {
-                var template = Handlebars.compile(jQuery(script).html());
-                jQuery(el).html(template({failed: data}));
+        var el = typeof arguments[1] === 'undefined' ? '#main' : arguments[1];
+        if (typeof arguments[0] === 'undefined') {
+            jQuery.get('/api.php?command=failed', function(data) {
+                jQuery.get('/js/templates/fail-list.handlebars', function(script) {
+                    var template = Handlebars.compile(jQuery(script).html());
+                    jQuery(el).html(template(QlessGui._buildTemplateOptions(data)));
+                });
             });
-        });
+        } else {
+            var type = arguments[0];
+            jQuery.get('/api.php?command=failed&type='+type, function (data) {
+                jQuery.get('/js/templates/fail-list.handlebars', function(script) {
+                    var template = Handlebars.compile(jQuery(script).html());
+                    jQuery(el).html(template(QlessGui._buildTemplateOptions(data)));
+                })
+            });
+        }
     },
 
     showTracked: function()
@@ -291,7 +301,7 @@ switch(match[1]) {
         QlessGui.showAbout();
         break;
     case '/failed':
-        QlessGui.showFails();
+        QlessGui.showFailed();
         break;
     case '/track':
         QlessGui.showTracked();
@@ -310,6 +320,11 @@ switch(match[1]) {
         if (match[1].match(/\/workers\/.*/)) {
             var workerName = match[1].match(/workers\/(.*)/)[1];
             QlessGui.showWorker(workerName);
+            break;
+        }
+        if (match[1].match(/\/failed\/.*/)) {
+            var failType = match[1].match(/failed\/(.*)/)[1];
+            QlessGui.showFailed(failType);
             break;
         }
         if (match[1].match(/\/jobs\/.*/)) {
