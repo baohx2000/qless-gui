@@ -184,19 +184,35 @@ var QlessGui = {
 
 var QlessActions = {
     track: function(jid) {
-        return jQuery.post('/api.php?command=track&jid=' + jid, window.location.reload);
+        return jQuery.post('/api.php?command=track&jid=' + jid, function() {window.location.reload(); });
     },
 
     untrack: function(jid) {
-        return jQuery.post('/api.php?command=untrack&jid=' + jid, window.location.reload);
+        return jQuery.post('/api.php?command=untrack&jid=' + jid, function() {window.location.reload(); });
+    },
+
+    retry: function(jid) {
+        return jQuery.post('/api.php?command=retry&jid=' + jid, function() {window.location.reload(); });
+    },
+
+    retryAll: function(group) {
+        return jQuery.post('/api.php?command=retryAll&group=' + group, function() {window.location.reload(); });
     },
 
     cancel: function(jid) {
-        return jQuery.post('/api.php?command=cancel&jid=' + jid, window.location.reload);
+        return jQuery.post('/api.php?command=cancel&jid=' + jid, function() {window.location.reload(); });
+    },
+
+    cancelAll: function(group) {
+        return jQuery.post('/api.php?command=cancelAll&group=' + group, function() {window.location.reload(); });
+    },
+
+    timeout: function(jid) {
+        return jQuery.post('/api.php?command=timeout&jid=' + jid, function() {window.location.reload(); });
     },
 
     move: function(jid, queue) {
-        return jQuery.post('/api.php?command=move&jid=' + jid + '&queue=' + queue, window.location.reload);
+        return jQuery.post('/api.php?command=move&jid=' + jid + '&queue=' + queue, function() {window.location.reload(); });
     }
 };
 

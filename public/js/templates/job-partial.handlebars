@@ -21,10 +21,10 @@
                     <div style="float:right; margin-top: 4px">
                         <div class="btn-group">
                             {{#if state::complete}}{{else}}
-                                <button title="delete" class="btn btn-danger" onclick="confirm('Delete?', function() { QlessActions.cancel('{{jid}}', fade) })"><i class="icon-remove"></i></button>
+                                <button title="delete" class="btn btn-danger" onclick="if(confirm('Delete?')) { QlessActions.cancel('{{jid}}', fade); }"><i class="icon-remove"></i></button>
                             {{/if}}
                             {{#if state::running}}
-                                <button title="Time out job" class="btn btn-danger" onclick="confirm('Time out job?', function() { QlessActions.timeout('{{jid}}') })"><i class="icon-time"></i></button>
+                                <button title="Time out job" class="btn btn-danger" onclick="if(confirm('Time out job?')) { QlessActions.timeout('{{jid}}') }"><i class="icon-time"></i></button>
                             {{/if}}
                             <button title="track" class="btn {{#if tracked}}active{{/if}}" data-toggle="button" onclick="$(this).hasClass('active') ? QlessActions.untrack('{{jid}}', fade) : QlessActions.track('{{jid}}', [], fade)"><i class="icon-flag"></i></button>
                             {{#if state::failed}}
@@ -72,7 +72,7 @@
                 </div>
             {{/if}}
 
-            {{#if dependents}}
+            {{#if dependents.length}}
             <div class="row">
                 <div class="span12" style="margin-bottom: 10px">
                     <div style="float:left; margin-right: 10px"><h3>Dependents:</h3></div>
@@ -131,7 +131,7 @@
                 </div>
             </div>
 
-            {{#if failure}}
+            {{#if failure.message}}
                     <div class="row">
                         <div class="span12">
                             <div class="alert alert-error">

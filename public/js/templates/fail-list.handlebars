@@ -31,8 +31,8 @@
                         </div>
                         <div class="span4">
                             <div class="btn-group" style="float:right; margin-top: 5px">
-                                <button class="btn btn-danger" title="cancel" onclick="confirm(this, 'Cancel?', function() { QlessActions.cancelall('{{f.name}}', fade) })"><i class="icon-remove"></i></button>
-                                <button class="btn btn-success" title="retry all" onclick="QlessActions.retryall('{{f.name}}', fade)"><i class="icon-repeat"></i></button>
+                                <button class="btn btn-danger" title="cancel" onclick="if(confirm('Cancel?')) { QlessActions.cancelAll('{{f.name}}'); }"><i class="icon-remove"></i></button>
+                                <button class="btn btn-success" title="retry all" onclick="QlessActions.retryAll('{{f.name}}');"><i class="icon-repeat"></i></button>
                             </div>
                         </div>
                     </div>

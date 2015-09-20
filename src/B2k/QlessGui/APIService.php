@@ -3,6 +3,7 @@ namespace B2k\QlessGui;
 
 
 use Qless\Client;
+use Qless\Job;
 
 class APIService
 {
@@ -140,8 +141,52 @@ class APIService
             case 'untrack':
                 $jid = $_REQUEST['jid'];
                 return json_decode($this->client->lua->run('track', [$command, $jid]), true);
-                break;
+            case 'retry':
+                return $this->retryJob($_REQUEST['jid']);
+            case 'retryAll':
+                return $this->retryAllJobs($_REQUEST['group']);
+            case 'cancel':
+                return $this->client->cancel($_REQUEST['jid']);
+            case 'cancelAll':
+                return $this->cancelAllJobs($_REQUEST['group']);
+            case 'timeout':
+                $this->client->timeout($_REQUEST['jid']);
+                return true;
+            case 'move':
+                $this->retryJob($_REQUEST['jid'], $_REQUEST['queue']);
+                return true;
         }
+        throw new \Exception('Invalid command: '.$command);
+    }
+
+    protected function retryAllJobs($group)
+    {
+        foreach(json_decode($this->client->failed($group, 0, 99), true)['jobs'] as $job) {
+            $this->retryJob($job);
+        }
+        return true;
+    }
+
+    protected function cancelAllJobs($group)
+    {
+        foreach(json_decode($this->client->failed($group, 0, 99), true)['jobs'] as $job) {
+            $this->client->cancel($job);
+        }
+        return true;
+    }
+
+    protected function retryJob($jid, $queue = false)
+    {
+        /** @var Job $job */
+        $job = $this->client->getJobs()->get($jid);
+        if ($job) {
+            $opts = [];
+            if ($queue) {
+                $opt['queue'] = $queue;
+            }
+            $job->requeue($opts);
+        }
+        return $this->client->get($jid);
     }
 
     public function getTracked()
