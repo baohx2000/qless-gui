@@ -3,20 +3,20 @@
 <div class="subnav subnav-fixed">
     <ul class="nav nav-pills">
         <li class="active"><a href="#all" data-toggle="tab">All ({{tracked.jobs.length}})</a></li>
-        <li><a href="#running"   data-toggle="tab">Running ({{countJobsbyState tracked.jobs 'running'}})</a></li>
-        <li><a href="#waiting"   data-toggle="tab">Waiting ({{countJobsbyState tracked.jobs 'waiting'}})</a></li>
-        <li><a href="#scheduled" data-toggle="tab">Scheduled ({{countJobsbyState tracked.jobs 'scheduled'}})</a></li>
-        <li><a href="#stalled"   data-toggle="tab">Stalled ({{countJobsbyState tracked.jobs 'stalled'}})</a></li>
-        <li><a href="#completed" data-toggle="tab">Completed ({{countJobsbyState tracked.jobs 'complete'}})</a></li>
-        <li><a href="#failed"    data-toggle="tab">Failed ({{countJobsbyState tracked.jobs 'failed'}})</a></li>
-        <li><a href="#depends"   data-toggle="tab">Depends ({{countJobsbyState tracked.jobs 'depends'}})</a></li>
+        <li><a href="#running"   data-toggle="tab">Running ({{countJobsByState tracked.jobs 'running'}})</a></li>
+        <li><a href="#waiting"   data-toggle="tab">Waiting ({{countJobsByState tracked.jobs 'waiting'}})</a></li>
+        <li><a href="#scheduled" data-toggle="tab">Scheduled ({{countJobsByState tracked.jobs 'scheduled'}})</a></li>
+        <li><a href="#stalled"   data-toggle="tab">Stalled ({{countJobsByState tracked.jobs 'stalled'}})</a></li>
+        <li><a href="#completed" data-toggle="tab">Completed ({{countJobsByState tracked.jobs 'complete'}})</a></li>
+        <li><a href="#failed"    data-toggle="tab">Failed ({{countJobsByState tracked.jobs 'failed'}})</a></li>
+        <li><a href="#depends"   data-toggle="tab">Depends ({{countJobsByState tracked.jobs 'depends'}})</a></li>
     </ul>
 </div>
 
 <div id="alerts" style="margin-top: 40px"></div>
 
 <div class="page-header">
-    <h1>Tracked Jobs <small>These are all the jobs you're tracking</h1>
+    <h1>Tracked Jobs <small>These are all the jobs you're tracking</small></h1>
 </div>
 
 <div class="tab-content">
@@ -31,33 +31,34 @@
         {{/eachJobByState}}
     </div>
     <div class="tab-pane" id="waiting">
-        <% tracked['jobs'].select { |job| job.state == 'waiting' }.each do |job| %>
-        <%= erb :_job, :layout => false, :locals => { :job => job, :queues => queues } %>
-        <% end %>
+        {{#eachJobByState tracked.jobs 'waiting' as |job|}}
+            {{> JOB}}
+        {{/eachJobByState}}
     </div>
     <div class="tab-pane" id="scheduled">
-        <% tracked['jobs'].select { |job| job.state == 'scheduled' }.each do |job| %>
-        <%= erb :_job, :layout => false, :locals => { :job => job, :queues => queues } %>
-        <% end %>
+        {{#eachJobByState tracked.jobs 'scheduled' as |job|}}
+            {{> JOB}}
+        {{/eachJobByState}}
     </div>
     <div class="tab-pane" id="stalled">
-        <% tracked['jobs'].select { |job| job.state == 'stalled' }.each do |job| %>
-        <%= erb :_job, :layout => false, :locals => { :job => job, :queues => queues } %>
-        <% end %>
+        {{#eachJobByState tracked.jobs 'stalled' as |job|}}
+            {{> JOB}}
+        {{/eachJobByState}}
     </div>
     <div class="tab-pane" id="completed">
-        <% tracked['jobs'].select { |job| job.state == 'complete' }.each do |job| %>
-        <%= erb :_job, :layout => false, :locals => { :job => job, :queues => queues } %>
-        <% end %>
+        {{#eachJobByState tracked.jobs 'complete' as |job|}}
+            {{> JOB}}
+        {{/eachJobByState}}
     </div>
     <div class="tab-pane" id="failed">
-        <% tracked['jobs'].select { |job| job.state == 'failed' }.each do |job| %>
-        <%= erb :_job, :layout => false, :locals => { :job => job, :queues => queues } %>
-        <% end %>
+        {{#eachJobByState tracked.jobs 'failed' as |job|}}
+            {{> JOB}}
+        {{/eachJobByState}}
     </div>
     <div class="tab-pane" id="depends">
-        <% tracked['jobs'].select { |job| job.state == 'depends' }.each do |job| %>
-        <%= erb :_job, :layout => false, :locals => { :job => job, :queues => queues } %>
-        <% end %>
+        {{#eachJobByState tracked.jobs 'depends' as |job|}}
+            {{> JOB}}
+        {{/eachJobByState}}
     </div>
 </div>
+</script>

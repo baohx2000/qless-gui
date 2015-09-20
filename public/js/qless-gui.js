@@ -73,7 +73,7 @@ var QlessGui = {
     {
         var el = typeof arguments[0] === 'undefined' ? '#main' : arguments[0];
         jQuery.get('/api.php?command=tracked', function(data) {
-            jQuery.get('/js/templates/job-list.handlebars', function(script) {
+            jQuery.get('/js/templates/track.handlebars', function(script) {
                 var template = Handlebars.compile(jQuery(script).html());
                 jQuery(el).html(template({tracked: data}));
             });
@@ -216,7 +216,7 @@ Handlebars.registerHelper('eachJobByState', function(a, state, block) {
     var s = '';
     for (var i in a) {
         if (a[i].state == state) {
-            s += block(a[i]);
+            s += block.fn(a[i]);
         }
     }
 
