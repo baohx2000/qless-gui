@@ -158,6 +158,12 @@ class APIService
             case 'priority':
                 $this->client->lua->run('priority', [$_REQUEST['jid'], $_REQUEST['priority']]);
                 return true;
+            case 'tag':
+                $this->client->lua->run('tag', [ 'add', $_REQUEST['jid'], $_REQUEST['tag'] ]);
+                return true;
+            case 'untag':
+                $this->client->lua->run('tag', [ 'remove', $_REQUEST['jid'], $_REQUEST['untag'] ]);
+                return true;
         }
         throw new \Exception('Invalid command: '.$command);
     }

@@ -217,6 +217,14 @@ var QlessActions = {
 
     priority: function(jid, priority) {
         return jQuery.post('/api.php?command=priority&jid=' + jid + '&priority=' + priority, function() {window.location.reload(); });
+    },
+    
+    tag: function(jid, tag) {
+        return jQuery.post('/api.php?command=tag&jid=' + jid + '&tag=' + tag, function() {window.location.reload(); });
+    },
+
+    untag: function(jid, untag) {
+        return jQuery.post('/api.php?command=untag&jid=' + jid + '&untag=' + untag, function() {window.location.reload(); });
     }
 };
 

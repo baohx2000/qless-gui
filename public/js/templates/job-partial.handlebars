@@ -92,8 +92,8 @@
                 <div class="span12 tags" style="margin-bottom: 3px;">
                     {{#each tags as |tag|}}
                         <div class="btn-group" style="float:left">
-                            <span class="tag">{{tag}}</span>
-                            <button class="btn" onclick="untag('{{jid}}', '{{tag}}')">
+                            <input class="span1 left" type="text" disabled value="{{tag}}" />
+                            <button class="btn" onclick="QlessActions.untag('{{../jid}}', '{{tag}}')">
                                 <i class="icon-remove"></i>
                             </button>
                         </div>
@@ -102,7 +102,7 @@
                     <!-- One for adding new tags -->
                     <div class="btn-group" style="float:left">
                         <input class="span1 add-tag left" type="text" placeholder="Add Tag" onchange="tag('{{jid}}', $(this).val())"/>
-                        <button class="btn" onclick="tag('{{jid}}', $(this).parent().siblings().val())">
+                        <button class="btn" onclick="QlessActions.tag('{{jid}}', $(this).prev().val())">
                             <i class="icon-plus"></i>
                         </button>
                     </div>
