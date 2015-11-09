@@ -79,6 +79,17 @@ var QlessGui = {
         }
     },
 
+    showCompleted: function()
+    {
+        var el = '#main';
+        jQuery.get('/api.php?command=completed', function(data) {
+            jQuery.get('/js/templates/job-list.handlebars', function(script) {
+                var template = Handlebars.compile(jQuery(script).html());
+                jQuery(el).html(template(QlessGui._buildTemplateOptions({jobs: data})));
+            });
+        });
+    },
+
     showTracked: function()
     {
         var el = typeof arguments[0] === 'undefined' ? '#main' : arguments[0];
@@ -353,6 +364,10 @@ switch(match[1]) {
         if (match[1].match(/\/failed\/.*/)) {
             var failType = match[1].match(/failed\/(.*)/)[1];
             QlessGui.showFailed(failType);
+            break;
+        }
+        if (match[1].match(/\/completed/)) {
+            QlessGui.showCompleted();
             break;
         }
         if (match[1].match(/\/jobs\/.*/)) {

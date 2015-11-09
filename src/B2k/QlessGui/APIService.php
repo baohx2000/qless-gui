@@ -73,7 +73,8 @@ class APIService
 
     public function completedJobs($start = 0, $count = 25)
     {
-        return $this->client->jobs('complete', $start, $count);
+        $jobIds = $this->client->jobs('complete', $start, $count);
+        return json_decode(call_user_func_array([$this->client, 'multiget'], $jobIds), true);
     }
 
     public function scheduledJobs($start = 0, $count = 25)

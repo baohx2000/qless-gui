@@ -30,6 +30,9 @@
                             {{#if state::failed}}
                                 <button title="requeue" class="btn btn-success" onclick="QlessActions.retry('{{jid}}', fade)"><i class="icon-repeat"></i></button>
                             {{/if}}
+                            {{#if state::complete}}
+                                <button title="requeue" class="btn btn-success" onclick="QlessActions.retry('{{jid}}', fade)"><i class="icon-repeat"></i></button>
+                            {{/if}}
                             <button title="move" class="btn dropdown-toggle btn-success" data-toggle="dropdown">
                                 <i class="caret"></i>
                             </button>
